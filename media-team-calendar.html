@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Calendar thing v0.1</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>/* CSS */
+    
+    body {
+      margin: 0;
+      padding: 0;
+      
+      background-image: linear-gradient(#e1d7bc,  #bdac8a);
+      overflow: hidden;
+      font-family: 'Albert Sans';
+      
+    }
+    
+    .container {/* contains entire thing */
+      display: flex;
+
+      height: 100vh; /* vh is viewport height */
+    }
+
+    main{
+
+      
+      width:100%;
+      height:100%;
+
+      border-style: solid;
+      border-width: 15px;
+      border-radius: 10px;
+      border-color: #BDA96E;
+    }
+    
+    .column {
+      flex: 1;
+      padding: 20px;
+    }
+    
+    .side-column {
+      flex-basis: 20%;
+      background-color: #cddaff00;
+      height: 100vh;
+
+    }
+    
+    .middle-column { 
+      flex-basis: 120%;
+
+      z-index: -1; /* -1 makes it layer below the buttons (and basically everything else as well) */
+      margin-top: 5%;
+      margin-bottom: 5%;
+
+      display: flex;
+      flex-wrap: nowrap; /* Prevent items from wrapping to the next line */
+      overflow: hidden; /* Hide horizontal overflow */
+
+      background-color: #fc000000;
+      
+      scale:1.3;
+      
+    }
+
+    .events-container {
+      display:flex;
+      
+      position: relative;
+      left: 10%; /* Move the div to the left by 100% of its width */
+      width: 500%; /* Set the width of the div */
+    }
+
+    .events-shared-attributes { /* attributes shared between all the event divs */
+      width: 50vh;
+      height: 90%;
+      text-align:left;
+
+      border-style: solid;
+      border-width: 5px;
+
+      margin-left: 1%; /* spacing between the event boxes */
+
+      top:50%;
+
+      background-color: rgb(255, 255, 255);
+      border-color: rgb(255, 255, 255);
+      border-radius: 25px;
+    }
+    
+
+    .event-date {
+      font-weight: bold;
+      font-size: 1.75vw;
+      position: relative; 
+      top: -5%;
+      left: 5%;
+    }
+    .event-details {
+      font-size: 1.25vw;
+      position: relative; 
+      top: -5%;
+      left: 5%;
+      margin-right: 5%;
+    }
+
+
+/*
+    #event-1 { 
+      
+    }
+    #event-2 {
+      
+    }
+    #event-3 {
+    
+    }
+    #event-4 {
+
+    }
+    #event-5 {
+
+    }
+    #event-6 {
+
+    }
+*/
+    
+.small-error {
+      position:absolute; 
+      top: 0;
+      left: 0;
+
+      z-index: 50;
+      position: absolute;
+      display: none;
+      width: 200%;
+      height: 300%;
+    }
+    
+    .button-generic {
+      display: block;
+      height: 90%; 
+      width: 10%;
+
+      margin: 0 auto;
+      padding: 10px;
+      position: absolute;
+
+      background-color: #D6CFBB;
+      color:#B4A782;
+      
+
+      text-align:center;
+      font-weight: bold;
+      font-size: 4vw;
+
+      border-style: solid;
+      border-color: #ffffff;
+      border-width: 8px;
+      border-radius: 25px;
+    }
+
+
+    /*
+    @keyframes moveLeft1 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-112.5%); }
+    }
+    @keyframes moveLeft2 {
+    0% { transform: translateX(-112.5%); }
+    100% { transform: translateX(-225%); }
+    }
+    @keyframes moveLeft3 {
+    0% { transform: translateX(-225%); }
+    100% { transform: translateX(-337.5%); }
+    }
+
+    @keyframes moveLeft4 {
+    0% { transform: translateX(-337.5%); }
+    100% { transform: translateX(-450%); }
+    }
+    @keyframes moveLeft5 {
+    0% { transform: translateX(-450%); }
+    100% { transform: translateX(-562.5%); }
+    }
+    @keyframes moveLeft6 {
+    0% { transform: translateX(-562.5%); }
+    100% { transform: translateX(-675%); }
+    }
+
+    .animation-move-left-1 {
+      animation: moveLeft1 1s ease-in-out;
+      animation-fill-mode:forwards;
+    }
+    .animation-move-left-2 {
+      animation: moveLeft2 1s ease-in-out;
+      animation-fill-mode:forwards;
+    }
+    .animation-move-left-3 {
+      animation: moveLeft3 1s ease-in-out;
+      animation-fill-mode:forwards;
+    }
+    .animation-move-left-4 {
+      animation: moveLeft4 1s ease-in-out;
+      animation-fill-mode:forwards;
+    }
+    .animation-move-left-5 {
+      animation: moveLeft5 1s ease-in-out;
+      animation-fill-mode:forwards;
+    }
+    .animation-move-left-6 {
+      animation: moveLeft6 1s ease-in-out;
+      animation-fill-mode:forwards;
+    }
+    */
+  </style> 
+
+
+
+</head>
+<body>
+
+  <div class="small-error">
+    <img src="https://i.imgur.com/lMXoNLN.png" alt="." class="Error Message (Screen size too small)" style="width:50%;height:50%">
+  </div>
+
+  <div class="container">
+
+    <div class="column side-column" id="left-side"> <!-- left -->
+
+      <button class="button-generic" type="button" id="left-button">
+
+        <img src="https://i.imgur.com/C9AtCHn.png" alt="." class="image" style="width:100%">
+        
+
+      </button>
+
+    </div>
+
+    <div class="column middle-column" id="middle"> <!-- middle -->
+
+      <div class="events-container">
+        <!-- event containers -->
+
+        <div class="events-shared-attributes" id="events-house-rank" style="background-color: #f1efe9; border-color: #B4A782; border-width: 5px;"> <!-- left -->
+
+          <p class="event-date">House Standings</p>
+
+          <p class="event-details" style="color: #3f128d;">
+            ✰ Elgar </p>
+          <p class="event-details" style="color:#c06b04">
+            ✰ Weatherill </p>
+          <p class="event-details" style="color:#d50a0a">
+            ✰ Morgan  </p>
+          <p class="event-details" style="color:#d824df">
+            ✰ Lewis  </p>
+          <p class="event-details" style="color:#716f04">
+            ✰ Maclaurin  </p>
+          <p class="event-details" style="color:#414141">
+            ✰ Blenheim  </p>
+          <p class="event-details">
+            The leaderboard is refreshing after the Pi Week activities. Stay Tuned! </p>
+          </p>
+    
+        </div>
+
+              <div class="events-shared-attributes" id="event-2"> <!-- left -->
+
+                <p class="event-date">Week of 8 Apr</p>
+
+                <p class="event-details">
+                  ✰ Wed 10/4: Arts ePortfolio showcase </p>
+                <p class="event-details">
+                  ✰ Thu 11/4: Arts ePortfolio showcase </p>
+                <p class="event-details">
+                  ✰ Fri 12/4: Arts ePortfolio showcase </p>
+              </div>
+
+              <div class="events-shared-attributes" id="event-3"> <!-- left -->
+
+                <p class="event-date">Week of 22 Apr</p>
+
+                <p class="event-details">
+                    ✰ Mon 22/4: Earth Day</p>
+                <p class="event-details">
+                    ✰ Mon 22/4: House Debating Round 3 [Chinese Round]</p>
+          
+              </div>
+
+
+              <div class="events-shared-attributes" id="event-4"> <!-- left -->
+                <p class="event-date">Week of 13 May</p>
+
+                <p class="event-details">
+                  ✰ Mon 13/5: House Debating Round 4 </p>
+
+              </div>
+
+
+              <div class="events-shared-attributes" id="event-5"> <!-- left -->
+
+                <p class="event-date">Week of 27 May</p>
+
+                <p class="event-details">
+                  ✰ Mon 27/5: House Debating Round 5 </p>
+
+
+          
+              </div>  
+              
+              <div class= "events-shared-attributes" id="event-1"> <!-- left -->
+                <p class="event-date">Week of Jun 10</p>
+
+                <p class="event-details">
+                  ✰ Thu 13/6: House Swimming</p>
+              </div>
+
+
+              <div class="events-shared-attributes" id="event-6"> <!-- left -->
+
+                <p class="event-date">Week of Jun 17</p>
+
+                <p class="event-details">
+                  ✰ Whole Week: Secondary Arts Showcase: Rotation 3</p>
+              </div>  
+
+      </div>
+
+      
+
+
+    </div>
+
+
+    <div class="column side-column"id="left-side"> <!-- right -->
+
+      <button class="button-generic" type="button" id="right-button">
+
+        <img src="https://i.imgur.com/qGJe2KO.png" alt="." class="image" style="width:100%">
+
+
+      </button>
+
+      
+      
+
+    </div>
+
+  </div>
+
+  <script> // Javascript
+
+    const button_left = document.getElementById('left-button');
+    const button_right = document.getElementById('right-button');
+    const elements_to_move = document.getElementsByClassName('events-shared-attributes');
+    var counter = 0;
+    var x_position = 0;
+    button_left.addEventListener('click', moveElementsToLeft);
+    button_right.addEventListener('click', moveElementsToRight);
+    
+    function moveElementsToLeft() {
+      outOfBounds();
+      const elements = document.getElementsByClassName('events-shared-attributes');
+      
+      x_position = x_position+50
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.transform = `translateX(${x_position}%)`;
+      }
+      console.log("move right, x pos is " + x_position);
+    }
+
+    function moveElementsToRight() {
+      outOfBounds();
+      
+      const elements = document.getElementsByClassName('events-shared-attributes');
+      x_position = x_position-50
+      for (let i = 0; i < elements.length; i++) {
+
+        elements[i].style.transform = `translateX(${x_position}%)`;
+      }
+      console.log("move right, x pos is " + x_position);
+      
+    }
+
+    function outOfBounds() {
+
+      if (x_position > 0) {
+        x_position = 0;
+      }
+      if (x_position < -450) {
+        x_position = -450;
+      }
+
+
+    }
+
+    function smallScreenError() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      if (w < 600 || h<240) {
+        console.log("error");
+        var element = document.querySelector('.small-error');
+        element.style.display = "block";
+      }
+      else{
+        var element = document.querySelector('.small-error');
+        element.style.display = "none";
+      }
+    
+    console.log("width " + w + ", and height is" + h);
+    }
+
+    
+      
+
+    function interval() {
+    // Code to be executed every x seconds
+    console.log("checking screen width...");
+    smallScreenError();
+
+    }
+    setInterval(interval, 200); // Run myFunction every 0.2 second (200 milliseconds)
+ 
+  </script>
+
+
+</body>
+</html>
